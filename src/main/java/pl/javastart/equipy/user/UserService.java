@@ -1,9 +1,12 @@
 package pl.javastart.equipy.user;
 
 import org.springframework.stereotype.Service;
+import pl.javastart.equipy.user.dto.UserDto;
+import pl.javastart.equipy.user.dto.UserMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -13,9 +16,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    List<User> allUsers() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-        return users;
+    List<UserDto> allUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserMapper::mapToDto)
+                .collect(Collectors.toList());
+
     };
 }
