@@ -1,11 +1,14 @@
 package pl.javastart.equipy.user;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.javastart.equipy.user.dto.UserDto;
+import pl.javastart.equipy.user.exception.PeselException;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -23,6 +26,21 @@ public class UserController {
             return userService.allUsers();
         } else {
             return userService.findUsersByLastName(lastName);
+        }
+    }
+
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
+    ResponseEntity<?> newUser(@RequestBody UserDto userDto) {
+        if (userDto.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID must by null");
+        } else {
+            UserDto savedUser = userService.registerNewUser(userDto);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(userDto.getId())
+                    .toUri();
+            return ResponseEntity.created(uri).body(savedUser);
         }
     }
 }
