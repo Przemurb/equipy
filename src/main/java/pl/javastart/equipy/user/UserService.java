@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import pl.javastart.equipy.user.dto.UserDto;
 import pl.javastart.equipy.user.dto.UserMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +20,11 @@ public class UserService {
                 .stream()
                 .map(UserMapper::mapToDto)
                 .collect(Collectors.toList());
-
     };
+    List<UserDto> findUsersByLastName(String lastName) {
+        return userRepository.findByLastNameContainingIgnoreCase(lastName)
+                .stream()
+                .map(UserMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
 }
