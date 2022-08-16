@@ -57,6 +57,6 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Aktualizowany obiekt musi mieć id zgodne z id w ścieżce zasobu");
         }
-        return userService.update(id, user.getPesel());
+        return userService.update(id, user);
     }
 }

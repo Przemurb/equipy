@@ -1,8 +1,6 @@
 package pl.javastart.equipy.user;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import pl.javastart.equipy.user.dto.UserDto;
 import pl.javastart.equipy.user.dto.UserMapper;
 import pl.javastart.equipy.user.exception.PeselException;
@@ -48,12 +46,10 @@ public class UserService {
         return user.map(UserMapper::mapToDto);
     }
 
-    UserDto update(Long id, String pesel) {
-        if (userRepository.existsByPesel(pesel)) {
+    UserDto update(Long id, UserDto userDto) {
+        if (userRepository.existsByPesel(userDto.getPesel())) {
             throw new PeselException();
         }
-        UserDto userDto = findUserById(id).orElseThrow();
-        userDto.setPesel(pesel);
         User user = UserMapper.mapToEntity(userDto);
         userRepository.save(user);
         return UserMapper.mapToDto(user);
