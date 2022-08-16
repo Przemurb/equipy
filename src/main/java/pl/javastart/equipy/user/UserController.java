@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.javastart.equipy.user.dto.UserDto;
-import pl.javastart.equipy.user.exception.PeselException;
 
 import java.net.URI;
 import java.util.List;
@@ -42,5 +41,22 @@ public class UserController {
                     .toUri();
             return ResponseEntity.created(uri).body(savedUser);
         }
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    UserDto userDetails(@PathVariable Long id) {
+         return userService.findUserById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                 String.format("Brak użytkownika o id %s", id)));
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    UserDto userUpdated(@PathVariable Long id, @RequestBody UserDto user) {
+        if(!id.equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Aktualizowany obiekt musi mieć id zgodne z id w ścieżce zasobu");
+        }
+        return userService.update(id, user.getPesel());
     }
 }

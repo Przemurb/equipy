@@ -8,6 +8,7 @@ import pl.javastart.equipy.user.dto.UserMapper;
 import pl.javastart.equipy.user.exception.PeselException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,5 +41,21 @@ public class UserService {
             User savedUser = userRepository.save(user);
             return UserMapper.mapToDto(savedUser);
         }
+    }
+
+    Optional<UserDto> findUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.map(UserMapper::mapToDto);
+    }
+
+    UserDto update(Long id, String pesel) {
+        if (userRepository.existsByPesel(pesel)) {
+            throw new PeselException();
+        }
+        UserDto userDto = findUserById(id).orElseThrow();
+        userDto.setPesel(pesel);
+        User user = UserMapper.mapToEntity(userDto);
+        userRepository.save(user);
+        return UserMapper.mapToDto(user);
     }
 }
