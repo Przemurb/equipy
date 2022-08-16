@@ -47,9 +47,10 @@ public class UserService {
     }
 
     UserDto update(Long id, UserDto userDto) {
-        if (userRepository.existsByPesel(userDto.getPesel())) {
+        userRepository.findByPesel(userDto.getPesel()).ifPresent(
+                u -> {if(!id.equals(u.getId()))
             throw new PeselException();
-        }
+        });
         User user = UserMapper.mapToEntity(userDto);
         userRepository.save(user);
         return UserMapper.mapToDto(user);
