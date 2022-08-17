@@ -21,4 +21,11 @@ public class AssetService  {
                 .map(AssetsMapper::mapToDto)
                 .collect(Collectors.toList());
     }
+
+    List<AssetDto> findAssetsByNameOrSerial(String text) {
+        return assetRepository.findAssetByNameContainingIgnoreCaseOrSerialNumberContainingIgnoreCase(text, text)
+                .stream()
+                .map(AssetsMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
 }
