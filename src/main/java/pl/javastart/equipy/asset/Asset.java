@@ -1,9 +1,11 @@
 package pl.javastart.equipy.asset;
 
+import pl.javastart.equipy.assignment.Assignment;
 import pl.javastart.equipy.category.Category;
 import pl.javastart.equipy.user.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,6 +20,17 @@ public class Asset {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+    @OneToMany (mappedBy = "asset")
+    private List<Assignment> assignments = new ArrayList<>();
+
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
+    }
 
 
     public Category getCategory() {

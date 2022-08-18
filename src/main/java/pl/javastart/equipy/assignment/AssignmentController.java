@@ -1,16 +1,14 @@
 package pl.javastart.equipy.assignment;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.javastart.equipy.assignment.dto.AssignmentDto;
+import pl.javastart.equipy.assignment.dto.AssetAssignmentDto;
+import pl.javastart.equipy.assignment.dto.UserAssignmentDto;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
 public class AssignmentController {
     private final AssignmentService assignmentService;
 
@@ -18,8 +16,13 @@ public class AssignmentController {
         this.assignmentService = assignmentService;
     }
 
-    @GetMapping ("/{id}/assignments")
-    List<AssignmentDto> assignments (@PathVariable Long id) {
+    @GetMapping ("/api/users/{id}/assignments")
+    List<UserAssignmentDto> userAssignments (@PathVariable Long id) {
         return assignmentService.allUserAssignments(id);
+    }
+
+    @GetMapping("/api/assets/{id}/assignments")
+    List<AssetAssignmentDto> assetAssignments (@PathVariable Long id) {
+        return assignmentService.allAssetAssignments(id);
     }
 }

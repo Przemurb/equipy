@@ -2,7 +2,7 @@ package pl.javastart.equipy.assignment.dto;
 
 import java.time.LocalDateTime;
 
-public class AssignmentDto {
+public class UserAssignmentDto {
     private Long id;
     private LocalDateTime start;
     private LocalDateTime end;
