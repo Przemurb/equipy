@@ -7,5 +7,7 @@ import java.util.List;
 
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, Long> {
-    public List<Asset> findAssetByNameContainingIgnoreCaseOrSerialNumberContainingIgnoreCase(String name, String serialNumber);
+    List<Asset> findAssetByNameContainingIgnoreCaseOrSerialNumberContainingIgnoreCase(String name, String serialNumber);
+    Asset findBySerialNumberIgnoreCase(String serialNumber);
+
 }

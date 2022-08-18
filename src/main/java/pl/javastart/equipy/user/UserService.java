@@ -34,11 +34,10 @@ public class UserService {
     UserDto registerNewUser(UserDto userDto) {
         if (userRepository.existsByPesel(userDto.getPesel())) {
             throw new PeselException();
-        } else {
-            User user = UserMapper.mapToEntity(userDto);
-            User savedUser = userRepository.save(user);
-            return UserMapper.mapToDto(savedUser);
         }
+        User user = UserMapper.mapToEntity(userDto);
+        User savedUser = userRepository.save(user);
+        return UserMapper.mapToDto(savedUser);
     }
 
     Optional<UserDto> findUserById(Long id) {
@@ -48,9 +47,10 @@ public class UserService {
 
     UserDto update(Long id, UserDto userDto) {
         userRepository.findByPesel(userDto.getPesel()).ifPresent(
-                u -> {if(!id.equals(u.getId()))
-            throw new PeselException();
-        });
+                u -> {
+                    if (!id.equals(u.getId()))
+                        throw new PeselException();
+                });
         User user = UserMapper.mapToEntity(userDto);
         userRepository.save(user);
         return UserMapper.mapToDto(user);

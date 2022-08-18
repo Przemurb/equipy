@@ -13,7 +13,7 @@ public class Asset {
     private String description;
     @Column(unique = true)
     private String serialNumber;
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
