@@ -1,8 +1,10 @@
 package pl.javastart.equipy.asset;
 
 import pl.javastart.equipy.category.Category;
+import pl.javastart.equipy.user.User;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Asset {
@@ -16,6 +18,7 @@ public class Asset {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
 
     public Category getCategory() {
         return category;

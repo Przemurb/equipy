@@ -18,3 +18,9 @@ VALUES
     ('Samsung A32', 'Telefon komórkowy marki Samsung, model A32, 6", 4/128 RAM, kolor czarny', 'TS77365VV23', 3),
     ('Apple iPhone 8', 'Telefon z zestawem słuchawkowym lightning i ładowarką', 'APL8185652HGT7', 3);
 
+INSERT INTO assignment (START, STOP, ASSET_ID, APPLICATION_USER_ID)
+VALUES
+    ('2017-10-08 15:00:00', '2018-10-08 15:00:00', 1, 1),
+    ('2018-10-09 12:00:00', null, 5, 1),
+    ('2018-10-19 10:00:00', null, 3, 2);
+
