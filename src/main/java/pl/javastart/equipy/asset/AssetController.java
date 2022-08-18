@@ -50,4 +50,16 @@ public class AssetController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}")
+    ResponseEntity<AssetDto> updateAsset (@RequestBody AssetDto assetdto, @PathVariable Long id) {
+        if(!id.equals(assetdto.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Aktualizowany obiekt musi mieć id zgodne z id w ścieżce zasobu");
+        }
+        AssetDto updatedAsset = assetService.update(id, assetdto);
+//        return ResponseEntity.ok().body(updatedAsset);
+        return ResponseEntity.ok(updatedAsset);
+
+    }
 }
