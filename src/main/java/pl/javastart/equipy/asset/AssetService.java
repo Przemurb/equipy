@@ -34,11 +34,16 @@ public class AssetService  {
     }
 
     AssetDto saveNewAsset (AssetDto assetDto) {
-        if(assetRepository.findBySerialNumberIgnoreCase(assetDto.getSerialNumber()) != null) {
+        if(assetRepository.findBySerialNumberIgnoreCase(assetDto.getSerialNumber()).isPresent()) {
             throw new SerialNumberException();
         }
         Asset asset = assetsMapper.mapToEntity(assetDto);
         Asset assetSaved = assetRepository.save(asset);
         return assetsMapper.mapToDto(assetSaved);
+    }
+
+    Optional<AssetDto> findAssetById (long id) {
+        Optional<Asset> asset = assetRepository.findById(id);
+        return asset.map(assetsMapper::mapToDto);
     }
 }

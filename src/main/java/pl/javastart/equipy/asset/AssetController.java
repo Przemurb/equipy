@@ -9,6 +9,7 @@ import pl.javastart.equipy.asset.dto.AssetDto;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/assets")
@@ -41,5 +42,12 @@ public class AssetController {
                 .buildAndExpand(assetDtoToSave.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(assetDtoToSave);
+    }
+
+    @GetMapping("{id}")
+    ResponseEntity<AssetDto> assetDetails (@PathVariable Long id) {
+        return assetService.findAssetById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
