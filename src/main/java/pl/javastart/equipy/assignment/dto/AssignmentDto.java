@@ -2,15 +2,13 @@ package pl.javastart.equipy.assignment.dto;
 
 import java.time.LocalDateTime;
 
-public class AssetAssignmentDto {
+public class AssignmentDto {
 
     private Long id;
     private LocalDateTime start;
     private LocalDateTime end;
     private Long userId;
-    private String firstName;
-    private String lastName;
-    private String pesel;
+    private Long assetId;
 
     public Long getId() {
         return id;
@@ -44,27 +42,11 @@ public class AssetAssignmentDto {
         this.userId = userId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Long getAssetId() {
+        return assetId;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPesel() {
-        return pesel;
-    }
-
-    public void setPesel(String pesel) {
-        this.pesel = pesel;
+    public void setAssetId(Long assetId) {
+        this.assetId = assetId;
     }
 }

@@ -1,10 +1,23 @@
 package pl.javastart.equipy.assignment.dto;
 
 import org.springframework.stereotype.Service;
+import pl.javastart.equipy.asset.AssetRepository;
+import pl.javastart.equipy.asset.exception.AssetNotFoundException;
 import pl.javastart.equipy.assignment.Assignment;
+import pl.javastart.equipy.user.UserRepository;
+import pl.javastart.equipy.user.exception.UserNotFoundException;
+
+import java.time.LocalDateTime;
 
 @Service
 public class AssignmentMapper {
+    private final UserRepository userRepository;
+    private final AssetRepository assetRepository;
+
+    public AssignmentMapper(UserRepository userRepository, AssetRepository assetRepository) {
+        this.userRepository = userRepository;
+        this.assetRepository = assetRepository;
+    }
 
 //        "id": 2,
 //        "start": "2018-10-09T12:00:00",
@@ -35,11 +48,40 @@ public class AssignmentMapper {
         AssetAssignmentDto dto = new AssetAssignmentDto();
         dto.setId(assignment.getId());
         dto.setStart(assignment.getStart());
-        dto.setStop(assignment.getStop());
+        dto.setEnd(assignment.getStop());
         dto.setUserId(assignment.getUser().getId());
         dto.setFirstName(assignment.getUser().getFirstName());
         dto.setLastName(assignment.getUser().getLastName());
         dto.setPesel(assignment.getUser().getPesel());
         return dto;
     }
+
+//    "id": 6,
+//    "start": "2018-10-19T09:00:32.227076",
+//    "end": null,
+//    "userId": 3,
+//    "assetId": 2
+    public static AssignmentDto mapToAssignmentDto (Assignment assignment) {
+        AssignmentDto dto = new AssignmentDto();
+        dto.setId(assignment.getId());
+        dto.setStart(assignment.getStart());
+        dto.setEnd(assignment.getStop());
+        dto.setUserId(assignment.getUser().getId());
+        dto.setAssetId(assignment.getAsset().getId());
+        return dto;
+    }
+
+
+//    "userId": 3,
+//    "assetId": 2
+    public Assignment mapToAssignmentEntity (AssignmentDto dto) {
+        Assignment assignment = new Assignment();
+        assignment.setId(dto.getId());
+        assignment.setStart(dto.getStart());
+        assignment.setStop(dto.getEnd());
+        assignment.setUser(userRepository.findById(dto.getUserId()).orElseThrow(UserNotFoundException::new));
+        assignment.setAsset(assetRepository.findById(dto.getAssetId()).orElseThrow(AssetNotFoundException::new));
+        return assignment;
+    }
+
 }
