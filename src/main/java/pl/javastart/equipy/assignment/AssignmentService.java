@@ -16,7 +16,6 @@ import pl.javastart.equipy.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,19 +58,28 @@ public class AssignmentService {
         if (!assetRepository.findById(assignmentDto.getAssetId()).isPresent()) {
             throw new AssetNotFoundException();
         }
-        if (!checkAssetAvailability(assignmentDto.getAssetId())) {
-            assignmentDto.setStart(LocalDateTime.now());
+        assignmentRepository.findByAsset_IdAndStopIsNull(assignmentDto.getAssetId())
+                .ifPresent(a -> {
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "Wybrane narzędzie nie jest dostępne");
+                });
+        assignmentDto.setStart(LocalDateTime.now());
             Assignment assignmentToSave = assignmentMapper.mapToAssignmentEntity(assignmentDto);
             Assignment savedAssignment = assignmentRepository.save(assignmentToSave);
             return AssignmentMapper.mapToAssignmentDto(savedAssignment);
-        }
-        throw new ResponseStatusException(HttpStatus.CONFLICT, "Wybrane narzędzie nie jest dostępne");
-    }
 
-    private boolean checkAssetAvailability(Long assetId) {
-        return assignmentRepository.findAllByAssetId(assetId)
-                .orElseThrow(AssetNotFoundException::new)
-                .stream()
-                .anyMatch(a -> (a.getStart() != null & a.getStop() == null));
+//        if (!checkAssetAvailability(assignmentDto.getAssetId())) {
+//            assignmentDto.setStart(LocalDateTime.now());
+//            Assignment assignmentToSave = assignmentMapper.mapToAssignmentEntity(assignmentDto);
+//            Assignment savedAssignment = assignmentRepository.save(assignmentToSave);
+//            return AssignmentMapper.mapToAssignmentDto(savedAssignment);
+//        }
+//        throw new ResponseStatusException(HttpStatus.CONFLICT, "Wybrane narzędzie nie jest dostępne");
+//    }
+
+//    private boolean checkAssetAvailability(Long assetId) {
+//        return assignmentRepository.findAllByAsset_Id(assetId)
+//                .orElseThrow(AssetNotFoundException::new)
+//                .stream()
+//                .anyMatch(a -> (a.getStop() == null));
     }
 }
