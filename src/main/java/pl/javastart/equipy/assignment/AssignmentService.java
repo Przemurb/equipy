@@ -34,7 +34,7 @@ public class AssignmentService {
         this.assignmentMapper = assignmentMapper;
     }
 
-    List<UserAssignmentDto> allUserAssignments(Long userId) {
+    public List<UserAssignmentDto> allUserAssignments(Long userId) {
         return userRepository.findById(userId)
                 .map(User::getAssignments)
                 .orElseThrow(UserNotFoundException::new)
@@ -43,7 +43,7 @@ public class AssignmentService {
                 .collect(Collectors.toList());
     }
 
-    List<AssetAssignmentDto> allAssetAssignments(Long assetId) {
+    public List<AssetAssignmentDto> allAssetAssignments(Long assetId) {
         return assetRepository.findById(assetId)
                 .map(Asset::getAssignments)
                 .orElseThrow(AssetNotFoundException::new)

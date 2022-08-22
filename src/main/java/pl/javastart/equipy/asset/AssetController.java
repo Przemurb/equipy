@@ -6,18 +6,21 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.javastart.equipy.asset.dto.AssetDto;
+import pl.javastart.equipy.assignment.AssignmentService;
+import pl.javastart.equipy.assignment.dto.AssetAssignmentDto;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/assets")
 public class AssetController {
     private final AssetService assetService;
+    private final AssignmentService assignmentService;
 
-    public AssetController(AssetService assetService) {
+    public AssetController(AssetService assetService, AssignmentService assignmentService) {
         this.assetService = assetService;
+        this.assignmentService = assignmentService;
     }
 
 
@@ -58,8 +61,11 @@ public class AssetController {
                     "Aktualizowany obiekt musi mieć id zgodne z id w ścieżce zasobu");
         }
         AssetDto updatedAsset = assetService.update(id, assetdto);
-//        return ResponseEntity.ok().body(updatedAsset);
         return ResponseEntity.ok(updatedAsset);
+    }
 
+    @GetMapping("/{id}/assignments")
+    List<AssetAssignmentDto> assetAssignments(@PathVariable Long id) {
+        return assignmentService.allAssetAssignments(id);
     }
 }

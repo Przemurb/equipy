@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.javastart.equipy.assignment.AssignmentService;
+import pl.javastart.equipy.assignment.dto.UserAssignmentDto;
 import pl.javastart.equipy.user.dto.UserDto;
 
 import java.net.URI;
@@ -14,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final AssignmentService assignmentService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AssignmentService assignmentService) {
         this.userService = userService;
+        this.assignmentService = assignmentService;
     }
 
     @GetMapping("")
@@ -46,17 +50,23 @@ public class UserController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     UserDto userDetails(@PathVariable Long id) {
-         return userService.findUserById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                 String.format("Brak użytkownika o id %s", id)));
+        return userService.findUserById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                String.format("Brak użytkownika o id %s", id)));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     UserDto userUpdated(@PathVariable Long id, @RequestBody UserDto user) {
-        if(!id.equals(user.getId())) {
+        if (!id.equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Aktualizowany obiekt musi mieć id zgodne z id w ścieżce zasobu");
         }
         return userService.update(id, user);
     }
+
+    @GetMapping("/{id}/assignments")
+    List<UserAssignmentDto> userAssignments(@PathVariable Long id) {
+        return assignmentService.allUserAssignments(id);
+    }
+
 }

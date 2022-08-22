@@ -5,33 +5,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.javastart.equipy.assignment.dto.AssetAssignmentDto;
 import pl.javastart.equipy.assignment.dto.AssignmentDto;
-import pl.javastart.equipy.assignment.dto.UserAssignmentDto;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
+@RequestMapping("/api/assignments")
 public class AssignmentController {
     private final AssignmentService assignmentService;
 
-    public AssignmentController(AssignmentService assignmentService, AssignmentRepository assignmentRepository) {
+    public AssignmentController(AssignmentService assignmentService) {
         this.assignmentService = assignmentService;
     }
 
-    @GetMapping("/api/users/{id}/assignments")
-    List<UserAssignmentDto> userAssignments(@PathVariable Long id) {
-        return assignmentService.allUserAssignments(id);
-    }
-
-    @GetMapping("/api/assets/{id}/assignments")
-    List<AssetAssignmentDto> assetAssignments(@PathVariable Long id) {
-        return assignmentService.allAssetAssignments(id);
-    }
-
-    @PostMapping("/api/assignments")
+    @PostMapping("")
     ResponseEntity<?> newAssignment(@RequestBody AssignmentDto assignmentDto) {
         if (assignmentDto.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID must by null");
@@ -48,7 +36,7 @@ public class AssignmentController {
         return ResponseEntity.created(uri).body(savedAssignment);
     }
 
-    @PostMapping("/api/assignments/{id}/end")
+    @PostMapping("/{id}/end")
     public ResponseEntity<?> finishAssignment(@PathVariable Long id) {
         LocalDateTime endDate = assignmentService.finishAssignment(id);
         return ResponseEntity.accepted().body(endDate);
