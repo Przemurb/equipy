@@ -10,10 +10,12 @@ import pl.javastart.equipy.assignment.dto.AssignmentDto;
 import pl.javastart.equipy.assignment.dto.UserAssignmentDto;
 import pl.javastart.equipy.assignment.dto.AssignmentMapper;
 import pl.javastart.equipy.asset.exception.AssetNotFoundException;
+import pl.javastart.equipy.assignment.exception.AssignmentFinishedException;
 import pl.javastart.equipy.user.exception.UserNotFoundException;
 import pl.javastart.equipy.user.User;
 import pl.javastart.equipy.user.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,5 +83,14 @@ public class AssignmentService {
 //                .orElseThrow(AssetNotFoundException::new)
 //                .stream()
 //                .anyMatch(a -> (a.getStop() == null));
+    }
+@Transactional
+    public LocalDateTime finishAssignment (Long assignmentId) {
+        Assignment assignment = assignmentRepository.findById(assignmentId).orElseThrow(AssetNotFoundException::new);
+        if(assignment.getStop() != null) {
+            throw new AssignmentFinishedException();
+        }
+        assignment.setStop(LocalDateTime.now());
+        return assignment.getStop();
     }
 }

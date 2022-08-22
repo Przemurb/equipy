@@ -16,11 +16,9 @@ import java.util.List;
 @RestController
 public class AssignmentController {
     private final AssignmentService assignmentService;
-    private final AssignmentRepository assignmentRepository;
 
     public AssignmentController(AssignmentService assignmentService, AssignmentRepository assignmentRepository) {
         this.assignmentService = assignmentService;
-        this.assignmentRepository = assignmentRepository;
     }
 
     @GetMapping("/api/users/{id}/assignments")
@@ -51,19 +49,9 @@ public class AssignmentController {
     }
 
     @PostMapping("/api/assignments/{id}/end")
-    ResponseEntity<LocalDateTime> endAssignment(@PathVariable Long id) {
-        if (!assignmentRepository.findById(id).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wypożyczenie o podanym ID nie istnieje");
-        }
-        assignmentRepository.findById(id)
-                .ifPresent(a -> {
-                    if (a.getStop() != null) {
-                        ResponseEntity.badRequest().build();
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wyposażenie ma już przypisaną datę zwrotu");
-                    }
-                    a.setStop(LocalDateTime.now());
-                    assignmentRepository.save(a);
-                });
-        return ResponseEntity.ok(LocalDateTime.now());
+    public ResponseEntity<?> finishAssignment(@PathVariable Long id) {
+        LocalDateTime endDate = assignmentService.finishAssignment(id);
+        return ResponseEntity.accepted().body(endDate);
     }
+
 }
